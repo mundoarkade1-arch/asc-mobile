@@ -1,4 +1,4 @@
-# ASC play
+# ASC Mobile
 
 App Android **nativo, só para celular** (vertical), com visual de vidro (Glass UI) azul.
 Sem WebView, sem Capacitor, sem versão para TV.

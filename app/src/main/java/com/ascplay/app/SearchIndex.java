@@ -35,7 +35,7 @@ public final class SearchIndex {
         boolean isCancelled();
     }
 
-    /** Validade do índice: 6 horas (o ASC play monta o índice em segundo plano ao abrir). Para mudar, mude só este número. */
+    /** Validade do índice: 6 horas (o ASC Mobile monta o índice em segundo plano ao abrir). Para mudar, mude só este número. */
     private static final long TTL_MS = 6L * 60L * 60L * 1000L;
     /** Teto de itens e de tamanho do arquivo. */
     private static final int MAX_ITEMS = 400000;

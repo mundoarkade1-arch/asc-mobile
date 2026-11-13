@@ -232,7 +232,7 @@ public class SettingsActivity extends Activity {
         } catch (Exception e) {
             // segue com "desconhecida"
         }
-        return "ASC play\n\nVersão instalada: " + name + " (número " + code + ")";
+        return "ASC Mobile\n\nVersão instalada: " + name + " (número " + code + ")";
     }
 
     private static String megaOrGiga(long bytes) {

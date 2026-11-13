@@ -75,7 +75,7 @@
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_gravity="center_horizontal"
-                android:contentDescription="ASC play"
+                android:contentDescription="ASC Mobile"
                 android:src="@drawable/ic_brand" />
 
             <TextView
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="ASC play"
+                android:text="ASC Mobile"
                 android:textColor="@color/asc_text"
                 android:textSize="28sp"
                 android:textStyle="bold" />

@@ -87,7 +87,7 @@ public final class Updater {
     private static final int MAX_REDIRECTS = 5;
     private static final int MAX_JSON_BYTES = 16 * 1024;
     private static final long MAX_APK_BYTES = 150L * 1024L * 1024L;
-    private static final String USER_AGENT = "ASC-Play/1.0 (Android)";
+    private static final String USER_AGENT = "ASC-Mobile/1.0 (Android)";
 
     private static final Handler MAIN = new Handler(Looper.getMainLooper());
     private static final AtomicBoolean BUSY = new AtomicBoolean(false);
@@ -217,7 +217,7 @@ public final class Updater {
                 f.delete();
             }
         }
-        File out = new File(dir, "ASC-play.apk");
+        File out = new File(dir, "ASC-Mobile.apk");
 
         HttpURLConnection conn = open(info.url);
         try {

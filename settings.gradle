@@ -14,5 +14,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "asc-play"
+rootProject.name = "asc-mobile"
 include ':app'
