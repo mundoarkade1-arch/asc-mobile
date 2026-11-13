@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Só celular, vertical. Tokens de tamanho do ASC play. -->
+<resources>
+    <dimen name="screen_pad_h">16dp</dimen>
+    <dimen name="nav_margin">14dp</dimen>
+    <dimen name="nav_clear">104dp</dimen>
+    <dimen name="title_text">28sp</dimen>
+    <dimen name="section_text">20sp</dimen>
+    <dimen name="body_text">15sp</dimen>
+    <dimen name="detail_text">16sp</dimen>
+
+    <!-- Grade de filmes e séries (3 colunas) -->
+    <dimen name="grid_col_w">104dp</dimen>
+    <dimen name="card_img_h">150dp</dimen>
+    <dimen name="card_name_text">12sp</dimen>
+
+    <!-- Tela inicial -->
+    <dimen name="poster_w">150dp</dimen>
+    <dimen name="channel_w">200dp</dimen>
+    <dimen name="rail_h_poster">260dp</dimen>
+    <dimen name="rail_h_channel">132dp</dimen>
+
+    <!-- Série -->
+    <dimen name="series_cover_w">96dp</dimen>
+    <dimen name="series_cover_h">144dp</dimen>
+    <integer name="series_plot_lines">4</integer>
+
+    <!-- Campos e botões (alvo de toque mínimo 48dp) -->
+    <dimen name="field_min_h">52dp</dimen>
+    <dimen name="field_text">16sp</dimen>
+    <dimen name="btn_min_h">48dp</dimen>
+    <dimen name="btn_text">16sp</dimen>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="asc_base">#0B1B32</color>
+    <color name="asc_bg">#0F1623</color>
+    <color name="asc_blue">#2F7DFF</color>
+    <color name="asc_blue_light">#5AAAFF</color>
+    <color name="asc_live">#FF4646</color>
+    <color name="asc_text">#FFFFFF</color>
+    <color name="asc_text2">#BED2F5</color>
+    <color name="asc_glass">#24FFFFFF</color>
+    <color name="asc_glass_strong">#3DFFFFFF</color>
+    <color name="asc_glass_border">#9996B9EB</color>
+</resources>

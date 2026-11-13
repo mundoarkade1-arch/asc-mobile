@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/screen_pad_h">
+
+        <ImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="wrap_content"
+            android:layout_height="360dp"
+            android:layout_gravity="center_horizontal"
+            android:adjustViewBounds="true"
+            android:background="@drawable/bg_home_image"
+            android:clipToOutline="true"
+            android:contentDescription="Capa"
+            android:maxWidth="260dp"
+            android:minWidth="180dp"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/asc_text"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_meta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/asc_blue_light"
+            android:textSize="14sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_play"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/btn_min_h"
+            android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_button"
+            android:minWidth="140dp"
+            android:paddingStart="22dp"
+            android:paddingEnd="22dp"
+            android:text="Tocar"
+            android:textAllCaps="false"
+            android:textColor="@color/asc_text"
+            android:textSize="@dimen/btn_text"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_continue"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/btn_min_h"
+            android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_glass_pill"
+            android:minWidth="140dp"
+            android:paddingStart="22dp"
+            android:paddingEnd="22dp"
+            android:text="Continuar de onde parei"
+            android:textAllCaps="false"
+            android:textColor="@color/asc_text"
+            android:textSize="@dimen/btn_text"
+            android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sv_plot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_card"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tv_plot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.1"
+                android:text="Carregando..."
+                android:textColor="@color/asc_text"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
