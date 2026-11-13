@@ -246,6 +246,9 @@ public class MainActivity extends Activity {
     private int frameSampleCount;
     private int renderedFrameRate = -1;
 
+    // Seta de voltar: aparece junto com os controles e some com eles
+    private View backButton;
+
     // Barra Agora / A seguir
     private View groupNowbar;
     private TextView tvNbChannel;
@@ -301,6 +304,13 @@ public class MainActivity extends Activity {
         playerView = findViewById(R.id.player_view);
         status = findViewById(R.id.status);
 
+        // Tela cheia sempre: o vídeo preenche a tela toda (inclusive a área do entalhe da câmera)
+        playerView.setResizeMode(androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
+        if (android.os.Build.VERSION.SDK_INT >= 28) {
+            getWindow().getAttributes().layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+        }
+
         makeControllerTransparent();
         createSkipButton();
         createEpisodeLabel();
@@ -312,6 +322,10 @@ public class MainActivity extends Activity {
                 new PlayerView.ControllerVisibilityListener() {
                     @Override
                     public void onVisibilityChanged(int visibility) {
+                        if (backButton != null) {
+                            backButton.setVisibility(visibility == View.VISIBLE
+                                    ? View.VISIBLE : View.GONE);
+                        }
                         if (visibility == View.VISIBLE) {
                             showEpisodeLabelWithControls();
                         } else {
@@ -783,6 +797,7 @@ public class MainActivity extends Activity {
                 Gravity.TOP | Gravity.START);
         lp.setMargins(dp(16), dp(16), 0, 0);
         addContentView(back, lp);
+        backButton = back;
     }
 
     @Override
