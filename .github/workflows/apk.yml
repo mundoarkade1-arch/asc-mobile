@@ -1,0 +1,85 @@
+name: Gerar APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    env:
+      TEM_CHAVE: ${{ secrets.KEYSTORE_B64 != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.9
+
+      - name: Definir versão e repositório
+        run: |
+          echo "VERSION_CODE=$((10000 + GITHUB_RUN_NUMBER))" >> "$GITHUB_ENV"
+          echo "VERSION_NAME=2.0.${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
+          sed -i "s#__REPO__#${GITHUB_REPOSITORY}#" app/src/main/java/com/ascplay/app/Updater.java
+
+      - name: Compilar (com chave)
+        if: env.TEM_CHAVE == 'true'
+        run: gradle assembleRelease --no-daemon
+
+      - name: Compilar (teste, sem chave)
+        if: env.TEM_CHAVE != 'true'
+        run: gradle assembleDebug --no-daemon
+
+      - name: Assinar o APK
+        if: env.TEM_CHAVE == 'true'
+        env:
+          KEYSTORE_B64: ${{ secrets.KEYSTORE_B64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/asc.jks"
+          BT="$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)"
+          "$BT/zipalign" -f -p 4 app/build/outputs/apk/release/app-release-unsigned.apk "$RUNNER_TEMP/alinhado.apk"
+          "$BT/apksigner" sign --ks "$RUNNER_TEMP/asc.jks" \
+            --ks-pass env:KEYSTORE_PASSWORD --key-pass env:KEY_PASSWORD \
+            --ks-key-alias "$KEY_ALIAS" --out ASC-play.apk "$RUNNER_TEMP/alinhado.apk"
+          rm -f "$RUNNER_TEMP/asc.jks"
+
+      - name: Pegar o APK de teste
+        if: env.TEM_CHAVE != 'true'
+        run: cp app/build/outputs/apk/debug/app-debug.apk ASC-play.apk
+
+      - name: Criar version.json
+        if: env.TEM_CHAVE == 'true'
+        run: |
+          SHA=$(sha256sum ASC-play.apk | cut -d' ' -f1)
+          URL="https://github.com/${GITHUB_REPOSITORY}/releases/download/v${VERSION_CODE}/ASC-play.apk"
+          printf '{"code":%s,"name":"%s","url":"%s","sha256":"%s"}\n' \
+            "$VERSION_CODE" "$VERSION_NAME" "$URL" "$SHA" > version.json
+
+      - name: Guardar o APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ASC-play-apk
+          path: ASC-play.apk
+
+      - name: Publicar versão
+        if: env.TEM_CHAVE == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VERSION_CODE }}
+          name: ASC play ${{ env.VERSION_NAME }}
+          files: |
+            ASC-play.apk
+            version.json
+          make_latest: true
