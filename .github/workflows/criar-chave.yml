@@ -1,0 +1,37 @@
+name: Criar chave
+
+on:
+  workflow_dispatch:
+
+jobs:
+  chave:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Criar a chave de assinatura
+        run: |
+          SENHA=$(openssl rand -hex 16)
+          keytool -genkeypair -keystore asc.jks -storetype PKCS12 \
+            -alias asc -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass "$SENHA" -keypass "$SENHA" \
+            -dname "CN=ASC play, O=ASC, C=BR"
+          {
+            echo "KEYSTORE_B64"
+            base64 -w0 asc.jks
+            echo
+            echo
+            echo "KEYSTORE_PASSWORD"
+            echo "$SENHA"
+            echo
+            echo "KEY_ALIAS"
+            echo "asc"
+            echo
+            echo "KEY_PASSWORD"
+            echo "$SENHA"
+          } > chaves.txt
+
+      - name: Guardar o arquivo com as chaves
+        uses: actions/upload-artifact@v4
+        with:
+          name: chaves
+          path: chaves.txt
+          retention-days: 1
