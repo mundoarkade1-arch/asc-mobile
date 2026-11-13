@@ -765,29 +765,24 @@ public class MainActivity extends Activity {
                     }
                 });
 
-        TextView options = new TextView(this);
-        options.setText("\u22EE");
-        options.setTextColor(Color.WHITE);
-        options.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
-        options.setGravity(Gravity.CENTER);
-        options.setContentDescription("Opções");
+        // Seta de voltar (substitui o botão dos 3 pontinhos)
+        TextView back = new TextView(this);
+        back.setText("\u2190");
+        back.setTextColor(Color.WHITE);
+        back.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+        back.setGravity(Gravity.CENTER);
+        back.setContentDescription("Voltar");
         GradientDrawable bg = new GradientDrawable();
         bg.setShape(GradientDrawable.OVAL);
         bg.setColor(0x990B1B32);
         bg.setStroke(dp(1), 0x9996B9EB);
-        options.setBackground(bg);
-        options.setClickable(true);
-        options.setOnClickListener(v -> {
-            if (canShowSchedule()) {
-                openSchedule();
-            } else if (item != null && player != null && item.kind != XtreamApi.Kind.LIVE) {
-                TrackDialog.show(this, player);
-            }
-        });
+        back.setBackground(bg);
+        back.setClickable(true);
+        back.setOnClickListener(v -> finish());
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(dp(48), dp(48),
-                Gravity.TOP | Gravity.END);
-        lp.setMargins(0, dp(16), dp(16), 0);
-        addContentView(options, lp);
+                Gravity.TOP | Gravity.START);
+        lp.setMargins(dp(16), dp(16), 0, 0);
+        addContentView(back, lp);
     }
 
     @Override
@@ -1476,8 +1471,11 @@ public class MainActivity extends Activity {
 
     // ---------- Barra Agora / A seguir ----------
 
+    // A tarja de programação (Agora / A seguir) fica desligada no celular.
+    private static final boolean NOWBAR_ENABLED = false;
+
     private void showNowbar() {
-        if (!canShowSchedule()) {
+        if (!NOWBAR_ENABLED || !canShowSchedule()) {
             return;
         }
         handler.removeCallbacks(hideNowbar);
