@@ -30,15 +30,19 @@ public final class ParentalStore {
     private static final int MAX_FAILS = 5;
     private static final long MAX_LOCK_SECONDS = 3600L;
 
-    // Nome de categoria adulta (mesmas palavras do app original)
-    private static final Pattern ADULT_CATEGORY = Pattern.compile(
-            "(^|[^a-z0-9])(adult[oa]?s?|xxx|porn[oa]?|erotic[oa]s?|sex|sexy|hentai|playboy"
-                    + "|18 ?\\+|\\+ ?18|18plus)($|[^a-z0-9])");
-
-    // Nome de canal ou filme adulto (lista mais curta, para evitar falsos alarmes)
-    private static final Pattern ADULT_NAME = Pattern.compile(
-            "(^|[^a-z0-9])(xxx|playboy|sextreme|penthouse|brazzers|hustler|porn[oa]?|hentai"
-                    + "|sexy ?hot|\\+ ?18|18 ?\\+)($|[^a-z0-9])");
+    // Conteúdo que pode ser adulto (categoria, canal, filme ou série). Lista ampla de propósito:
+    // com o controle parental ligado, é melhor esconder um nome a mais do que deixar um adulto passar.
+    // (O texto chega sem acento e em minúsculas: ver simplify.)
+    private static final Pattern ADULT = Pattern.compile(
+            // pedaços que indicam adulto em qualquer parte do nome
+            "porn|xxx|hentai|playboy|penthouse|brazzers|hustler|only[^a-z0-9]?fans|privacy"
+                    + "|redtube|xvideos|xhamster|dorcel|bangbros|camgirl|striptease|stripper"
+                    + "|fetish|fetiche|bdsm|erotic|sensual|safad|putaria|nudez"
+                    // palavras que só valem no começo do nome (assim não pega "sexta" nem "Essex")
+                    + "|(^|[^a-z0-9])(sex(?!t)|nude|nudes)"
+                    // adulto, adultos, adult, 18+, +18, 18plus
+                    + "|(^|[^a-z0-9])adult[oa]?s?($|[^a-z0-9])"
+                    + "|(^|[^a-z0-9])(18 ?\\+|\\+ ?18|18plus)");
 
     private ParentalStore() {
     }
@@ -137,12 +141,12 @@ public final class ParentalStore {
 
     /** Nome de categoria parece adulto? */
     public static boolean isAdultCategory(String name) {
-        return ADULT_CATEGORY.matcher(simplify(name)).find();
+        return ADULT.matcher(simplify(name)).find();
     }
 
     /** Nome de canal, filme ou série parece adulto? */
     public static boolean isAdultName(String name) {
-        return ADULT_NAME.matcher(simplify(name)).find();
+        return ADULT.matcher(simplify(name)).find();
     }
 
     // ---------- Ajudas ----------
