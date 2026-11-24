@@ -262,6 +262,12 @@ public class LoginActivity extends Activity {
                 c = new CredentialStore.Credentials(usedMode, "", "", "", m3u.trim());
             }
             CredentialStore.save(this, c);
+            String enderecoUsado = (c.server + c.m3uUrl).toLowerCase();
+            if (enderecoUsado.startsWith("http://")) {
+                android.widget.Toast.makeText(this,
+                        "Atenção: este endereço não usa conexão segura (http). Use só em Wi-Fi de confiança.",
+                        android.widget.Toast.LENGTH_LONG).show();
+            }
             showStatus(getString(R.string.msg_ok), COLOR_OK);
             startActivity(new Intent(this, HomeActivity.class));
             finish();

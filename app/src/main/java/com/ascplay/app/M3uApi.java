@@ -551,7 +551,13 @@ public final class M3uApi {
                 if (location == null || location.isEmpty()) {
                     throw new IOException("redirecionamento sem destino");
                 }
+                String protocoloAntes = url.getProtocol();
                 url = new URL(url, location);
+                if ("https".equals(protocoloAntes) && "http".equals(url.getProtocol())) {
+                    // Não deixa uma conexão segura cair para http (a senha iria sem proteção).
+                    conn.disconnect();
+                    throw new IOException("redirecionamento inseguro");
+                }
                 String protocol = url.getProtocol();
                 if (!"http".equals(protocol) && !"https".equals(protocol)) {
                     throw new IOException("redirecionamento invalido");

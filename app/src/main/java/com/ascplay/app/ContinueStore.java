@@ -30,8 +30,7 @@ import javax.crypto.spec.GCMParameterSpec;
  * Cada série aparece UMA vez só, com o último episódio.
  * A lista inteira é criptografada (AES-GCM, chave do Android Keystore),
  * porque o endereço do vídeo pode ter usuário e senha.
- * Se o Keystore não funcionar, guarda sem criptografia
- * (dentro do armazenamento privado do app), como o CredentialStore.
+ * Se o Keystore não funcionar, a lista não é gravada (nunca fica em texto aberto).
  */
 public final class ContinueStore {
 
@@ -220,16 +219,11 @@ public final class ContinueStore {
 
     // ---------- Proteção dos valores ----------
 
-    private static String protect(String plain) {
-        byte[] data = plain.getBytes(StandardCharsets.UTF_8);
-        if (Build.VERSION.SDK_INT >= 23) {
-            try {
-                return PREFIX_ENC + encrypt(data);
-            } catch (Exception e) {
-                // Keystore com problema neste aparelho: usa o plano B.
-            }
+    private static String protect(String plain) throws Exception {
+        if (Build.VERSION.SDK_INT < 23) {
+            throw new IllegalStateException("sem keystore");
         }
-        return PREFIX_PLAIN + Base64.encodeToString(data, Base64.NO_WRAP);
+        return PREFIX_ENC + encrypt(plain.getBytes(StandardCharsets.UTF_8));
     }
 
     private static String unprotect(String stored) throws Exception {

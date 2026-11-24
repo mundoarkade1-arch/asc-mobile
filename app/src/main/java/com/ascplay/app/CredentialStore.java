@@ -19,8 +19,8 @@ import javax.crypto.spec.GCMParameterSpec;
 /**
  * Guarda o login no armazenamento privado do app.
  * Os valores são criptografados (AES-GCM) com uma chave do Android Keystore.
- * Se o Keystore do aparelho não funcionar, guarda sem criptografia
- * (continua dentro do armazenamento privado do app).
+ * Se o Keystore do aparelho não funcionar, NÃO grava o login no disco:
+ * ele fica só na memória enquanto o app estiver aberto (depois é preciso entrar de novo).
  */
 public final class CredentialStore {
 
@@ -49,17 +49,30 @@ public final class CredentialStore {
         }
     }
 
+    /** Login guardado só na memória (usado se o Keystore não funcionar). */
+    private static volatile Credentials memory = null;
+
     private CredentialStore() {
     }
 
     public static void save(Context context, Credentials c) {
-        SharedPreferences.Editor ed = prefs(context).edit();
-        ed.putString("mode", c.mode);
-        ed.putString("server", protect(c.server));
-        ed.putString("user", protect(c.user));
-        ed.putString("pass", protect(c.pass));
-        ed.putString("m3u", protect(c.m3uUrl));
-        ed.apply();
+        memory = c;
+        try {
+            String server = protect(c.server);
+            String user = protect(c.user);
+            String pass = protect(c.pass);
+            String m3u = protect(c.m3uUrl);
+            SharedPreferences.Editor ed = prefs(context).edit();
+            ed.putString("mode", c.mode);
+            ed.putString("server", server);
+            ed.putString("user", user);
+            ed.putString("pass", pass);
+            ed.putString("m3u", m3u);
+            ed.apply();
+        } catch (Exception e) {
+            // Keystore com problema: não grava nada em texto aberto no disco.
+            prefs(context).edit().clear().apply();
+        }
     }
 
     /** Devolve o login salvo, ou null se não houver (ou se não for possível ler). */
@@ -67,7 +80,7 @@ public final class CredentialStore {
         SharedPreferences p = prefs(context);
         String mode = p.getString("mode", null);
         if (mode == null) {
-            return null;
+            return memory;
         }
         try {
             return new Credentials(
@@ -84,6 +97,7 @@ public final class CredentialStore {
     }
 
     public static void clear(Context context) {
+        memory = null;
         prefs(context).edit().clear().apply();
     }
 
@@ -93,19 +107,14 @@ public final class CredentialStore {
 
     // ---------- Proteção dos valores ----------
 
-    private static String protect(String plain) {
+    private static String protect(String plain) throws Exception {
         if (plain == null) {
             plain = "";
         }
-        byte[] data = plain.getBytes(StandardCharsets.UTF_8);
-        if (Build.VERSION.SDK_INT >= 23) {
-            try {
-                return PREFIX_ENC + encrypt(data);
-            } catch (Exception e) {
-                // Keystore com problema neste aparelho: usa o plano B.
-            }
+        if (Build.VERSION.SDK_INT < 23) {
+            throw new IllegalStateException("sem keystore");
         }
-        return PREFIX_PLAIN + Base64.encodeToString(data, Base64.NO_WRAP);
+        return PREFIX_ENC + encrypt(plain.getBytes(StandardCharsets.UTF_8));
     }
 
     private static String unprotect(String stored) throws Exception {

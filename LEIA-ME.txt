@@ -1,0 +1,9 @@
+COMO SUBIR (celular ou computador)
+1. Descompacte este zip.
+2. No GitHub, abra o repositorio asc-mobile > Add file > Upload files.
+3. Arraste TODO o conteudo descompactado (as pastas .github, app, docs e os arquivos soltos).
+   As pastas ja estao certas: cada arquivo vai para o lugar dele e substitui o antigo.
+4. Escreva em "Commit changes": Correcoes de seguranca. Clique em Commit.
+5. Va em Actions > Gerar APK e veja se ficou verde.
+OBS: .gitignore e .github comecam com ponto. Se seu sistema esconder arquivos com ponto,
+ative "mostrar arquivos ocultos" antes de arrastar.
